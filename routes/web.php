@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PersonController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Initial route redirect to list person
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('people.index');
 });
+
+// People routes
+Route::resource('people', PersonController::class);
+
+// Contacts routes
+Route::resource('contacts', ContactController::class);

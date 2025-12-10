@@ -13,7 +13,9 @@ class PersonController extends Controller
      */
     public function index()
     {
-        //
+        $people = Person::latest()->paginate(10);
+
+        return view('people.index', compact('people'));
     }
 
     /**
@@ -21,7 +23,7 @@ class PersonController extends Controller
      */
     public function create()
     {
-        //
+        return view('people.create');
     }
 
     /**
@@ -29,7 +31,11 @@ class PersonController extends Controller
      */
     public function store(StorePersonRequest $request)
     {
-        //
+        Person::create($request->validated());
+
+        return redirect()
+            ->route('people.index')
+            ->with('success', 'Person registered successfully!');
     }
 
     /**

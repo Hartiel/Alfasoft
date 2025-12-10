@@ -43,7 +43,8 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        //
+        $person->load('contacts');
+        return view('people.show', compact('person'));
     }
 
     /**
@@ -51,7 +52,7 @@ class PersonController extends Controller
      */
     public function edit(Person $person)
     {
-        //
+        return view('people.edit', compact('person'));
     }
 
     /**
@@ -59,7 +60,11 @@ class PersonController extends Controller
      */
     public function update(UpdatePersonRequest $request, Person $person)
     {
-        //
+        $person->update($request->validated());
+
+        return redirect()
+            ->route('people.index')
+            ->with('success', 'Person updated successfully!');
     }
 
     /**
@@ -67,6 +72,10 @@ class PersonController extends Controller
      */
     public function destroy(Person $person)
     {
-        //
+        $person->delete();
+
+        return redirect()
+            ->route('person.index')
+            ->with('success', 'Person deleted successfully!');
     }
 }

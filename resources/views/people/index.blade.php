@@ -31,7 +31,7 @@
                             <a href="{{ route('people.edit', $person) }}" class="btn btn-sm btn-outline-warning" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <button type="button" class="btn btn-sm btn-outline-danger" title="Delete" disabled>
+                            <button type="button" class="btn btn-sm btn-outline-danger" title="Delete">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>

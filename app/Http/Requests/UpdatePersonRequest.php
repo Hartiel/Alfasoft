@@ -11,7 +11,7 @@ class UpdatePersonRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,10 @@ class UpdatePersonRequest extends FormRequest
      */
     public function rules(): array
     {
+        $personId = $this->route('person')->id;
         return [
-            //
+            'name' => ['required', 'string', 'min:6'],
+            'email' => ['required', 'email', "unique:people,email,{$personId}"],
         ];
     }
 }

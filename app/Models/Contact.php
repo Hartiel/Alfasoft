@@ -13,7 +13,7 @@ class Contact extends Model
     protected $fillable = [
         'country_code',
         'number',
-        'person_id';
+        'person_id',
     ];
 
     /**

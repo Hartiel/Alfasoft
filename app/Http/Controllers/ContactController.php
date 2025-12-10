@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
+use App\Models\Person;
+use App\Services\CountryService;
 
 class ContactController extends Controller
 {
+    protected $countryService;
+
+    // Dependency Injection
+    public function __construct(CountryService $countryService)
+    {
+        $this->countryService = $countryService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -19,9 +30,21 @@ class ContactController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        // Validate if find person_id in URL
+        if (!$request->has('person_id')) {
+            return redirect()
+                ->route('people.index')
+                ->with('error', 'First select person.');
+        }
+
+        $person = Person::findOrFail($request->person_id);
+
+        // Get countries
+        $countries = $this->countryService->getCountries();
+
+        return view('contacts.create', compact('person', 'countries'));
     }
 
     /**
@@ -29,7 +52,11 @@ class ContactController extends Controller
      */
     public function store(StoreContactRequest $request)
     {
-        //
+        Contact::create($request->validated());
+
+        return redirect()
+            ->route('people.show', $request->person_id)
+            ->with('success', 'Contact added successfully!');
     }
 
     /**

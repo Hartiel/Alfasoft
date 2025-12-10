@@ -14,12 +14,45 @@
         <p><strong>Created At:</strong> {{ $person->created_at->format('d/m/Y H:i') }}</p>
 
         <hr>
-        <h4>Contacts</h4>
-        <div class="alert alert-secondary">
-            Don't have contacts.
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Contacts</h4>
+            <a href="{{ route('contacts.create', ['person_id' => $person->id]) }}" class="btn btn-success btn-sm">
+                Add new contact
+            </a>
         </div>
 
-        <button class="btn btn-success" disabled>Add new contact</button>
+        @if($person->contacts->count() > 0)
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Country</th>
+                        <th>Number</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($person->contacts as $contact)
+                    <tr>
+                        <td>+{{ $contact->country_code }}</td>
+                        <td>{{ $contact->number }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('contacts.edit', $contact) }}" class="btn btn-sm btn-warning">Edit</a>
+
+                            <form action="{{ route('contacts.destroy', $contact) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this contact?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @else
+            <div class="alert alert-secondary">
+                No contacts found.
+            </div>
+        @endif
     </div>
 </div>
 @endsection

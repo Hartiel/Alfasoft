@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateContactRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateContactRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +22,19 @@ class UpdateContactRequest extends FormRequest
      */
     public function rules(): array
     {
+        $contact = $this->route('contact');
+
         return [
-            //
+            'country_code' => ['required', 'string'],
+            'number' => [
+                'required',
+                'digits:9',
+                // Ignore actual ID in duplicated verification
+                Rule::unique('contacts')->ignore($contact->id)->where(function ($query) {
+                    return $query->where('country_code', $this->country_code)
+                                 ->where('number', $this->number);
+                }),
+            ],
         ];
     }
 }

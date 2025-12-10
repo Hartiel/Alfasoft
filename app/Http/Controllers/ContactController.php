@@ -72,7 +72,10 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        //
+        $countries = $this->countryService->getCountries();
+        $person = $contact->person;
+
+        return view('contacts.edit', compact('contact', 'person', 'countries'));
     }
 
     /**
@@ -80,7 +83,11 @@ class ContactController extends Controller
      */
     public function update(UpdateContactRequest $request, Contact $contact)
     {
-        //
+        $contact->update($request->validated());
+
+        return redirect()
+            ->route('people.show', $contact->person_id)
+            ->with('success', 'Contact updated successfully!');
     }
 
     /**
@@ -88,6 +95,12 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $personId = $contact->person_id;
+
+        $contact->delete();
+
+        return redirect()
+            ->route('people.show', $personId)
+            ->with('success', 'Contact deleted successfully!');
     }
 }
